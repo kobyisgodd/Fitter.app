@@ -8,11 +8,13 @@ const Home = {
 // Lazy-load the Register and Intro pages
 const Register = () => import('../views/RegisterView.vue')
 const Intropage = () => import('../views/Intropage.vue')
+const Homepage = () => import('../views/Homepage.vue')
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
   { path: '/register', name: 'Register', component: Register },
-  { path: '/intropage', name: 'Intropage', component: Intropage }
+  { path: '/intropage', name: 'Intropage', component: Intropage },
+  { path: '/home', name: 'Homepage', component: Homepage },
 ]
 
 const router = createRouter({

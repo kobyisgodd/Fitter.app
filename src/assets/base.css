@@ -35,7 +35,9 @@
 
   --section-gap: 160px;
 }
-
+body {
+  overflow-x: hidden;
+}
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: var(--vt-c-black);
