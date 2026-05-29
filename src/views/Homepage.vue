@@ -56,14 +56,13 @@
       <div class="stats-grid">
         <div class="stat-card" v-for="stat in weekStats" :key="stat.label">
           <span class="stat-label">{{ stat.label }}</span>
-          <span class="stat-value">{{ stat.value }}</span>
         </div>
       </div>
 
       <!-- Targeted muscle groups -->
       <div class="section-title">Targeted muscle groups</div>
       <div class="muscles-grid">
-        <div class="muscle-card" v-for="muscle in muscleGroups" :key="muscle.name">
+        <div class="muscle-card" v-for="muscle in sortedMuscleGroups" :key="muscle.name">
           <span class="muscle-label">{{ muscle.name }}</span>
           <span class="muscle-sets">{{ muscle.sets }} sets</span>
         </div>
@@ -88,7 +87,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-// ── Asset imports (Vite spracuje správne cesty) ───────────────
 import pfpImg      from '@/assets/pfp.png'
 import flameImg    from '@/assets/flame.png'
 import settingsImg from '@/assets/settings.png'
@@ -153,7 +151,6 @@ function nextWeek() { weekOffset.value++ }
 function selectDay(day) { console.log('Selected', day.date) }
 function goToSettings() { console.log('Settings') }
 
-// ── Štatistiky ────────────────────────────────────────────────
 const weekStats = ref([
   { label: 'Duration', value: '275 min' },
   { label: 'Workouts', value: '8' },
