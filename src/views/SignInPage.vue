@@ -21,15 +21,6 @@
       <!-- FORM -->
       <div class="form-card">
 
-        <!-- NAME -->
-        <label>Name</label>
-
-        <input
-          type="text"
-          placeholder="Enter name"
-          v-model="name"
-        />
-
         <!-- EMAIL -->
         <label>Email</label>
 
@@ -59,9 +50,9 @@
         <!-- BUTTON -->
         <button
           class="btn-submit"
-          @click="register"
+          @click="signIn"
         >
-          Register
+          Sign In
         </button>
 
       </div>
@@ -79,7 +70,6 @@ import logo from '../assets/fiterlogo.png'
 const router = useRouter()
 
 // INPUTS
-const name = ref('')
 const email = ref('')
 const password = ref('')
 
@@ -91,12 +81,11 @@ function goBack() {
   router.back()
 }
 
-// REGISTER
-function register() {
+// SIGN IN
+function signIn() {
 
   // EMPTY CHECK
   if (
-    !name.value ||
     !email.value ||
     !password.value
   ) {
@@ -104,23 +93,34 @@ function register() {
     return
   }
 
-  // SAVE USER TEMPORARY
-  const user = {
-    name: name.value,
-    email: email.value,
-    password: password.value
-  }
-
-  localStorage.setItem(
-    'user',
-    JSON.stringify(user)
+  // GET SAVED USER
+  const savedUser = JSON.parse(
+    localStorage.getItem('user')
   )
 
-  // CLEAR ERROR
-  error.value = ''
+  // CHECK IF USER EXISTS
+  if (!savedUser) {
+    error.value = 'No registered user found.'
+    return
+  }
 
-  // OPEN HOME PAGE
-  router.push('/home')
+  // CHECK LOGIN
+  if (
+    email.value === savedUser.email &&
+    password.value === savedUser.password
+  ) {
+
+    // CLEAR ERROR
+    error.value = ''
+
+    // GO HOME
+    router.push('/home')
+
+  } else {
+
+    error.value = 'Wrong email or password.'
+
+  }
 }
 </script>
 
@@ -138,6 +138,7 @@ body,
 
 .wrapper {
   min-height: 100vh;
+
   background: linear-gradient(
     to bottom,
     #1f1f1f 25%,

@@ -2,7 +2,7 @@
   <div class="wrapper">
     <img class="logo" :src="logo" alt="Fiter logo" height="478" width="393"/>
     <div class="center-container">
-      <button class="btn-signin">Sign In</button>
+      <button @click="goSignin" class="btn-signin">Sign In</button>
       <button @click="goRegister" class="btn-register">Register</button>
     </div>
   </div>
@@ -16,6 +16,10 @@ const router = useRouter()
 
 function goRegister() {
   router.push({ name: 'Register' })
+}
+
+function goSignin() {
+  router.push({ name: 'Signin' })
 }
 </script>
 
@@ -71,3 +75,4 @@ html, body {
 }
 
 </style>
+

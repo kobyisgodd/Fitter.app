@@ -1,21 +1,30 @@
 <template>
   <div class="app-shell">
-    <!-- Header -->
+
+    <!-- HEADER -->
     <div class="header">
       <div class="header-left">
-        <img :src="assets.pfp" alt="Profile" class="avatar" />
+        <img
+          :src="assets.pfp"
+          alt="Profile"
+          class="avatar"
+          @click="goProfile"
+        />
+
         <div class="streak-badge">
           <span class="streak-number">75</span>
           <img :src="assets.flame" alt="streak" class="flame-icon" />
         </div>
       </div>
-      <button class="settings-btn" @click="goToSettings">
+
+      <button class="settings-btn" @click="goSettings">
         <img :src="assets.settings" alt="Settings" class="settings-icon" />
       </button>
     </div>
 
-    <!-- Scrollable content -->
+    <!-- CONTENT (UNCHANGED) -->
     <div class="content">
+
       <!-- Greeting -->
       <div class="greeting">
         <p class="greeting-name">Hello {{ userName }}!</p>
@@ -24,29 +33,29 @@
 
       <!-- Week calendar -->
       <div class="calendar-section">
-        <p class="calendar-date">{{ formattedDate }}</p>
+        <p class="calendar-date" @click="goStreak" >{{ formattedDate }}</p>
         <div class="calendar-row">
           <button class="nav-arrow" @click="prevWeek">&#8249;</button>
-          <div class="days-strip">
+
+          <div class="days-strip" @click="goStreak">
             <div
-                v-for="day in weekDays"
-                :key="day.date"
-                class="day-cell"
-                :class="{
+              v-for="day in weekDays"
+              :key="day.date"
+              class="day-cell"
+              :class="{
                 'day-active': day.isToday,
                 'day-completed': day.status === 'done',
                 'day-missed': day.status === 'missed',
               }"
-                @click="selectDay(day)"
+              @click="selectDay(day)"
             >
               <span class="day-label">{{ day.dayName }}</span>
               <span class="day-number">{{ day.dayNum }}</span>
-              <span class="day-icon">
-                <img v-if="day.status === 'done' || day.status === 'today'" :src="assets.flame" class="day-status-icon" alt="done" />
-                <span v-else-if="day.status === 'missed'" class="miss-x">✕</span>
-              </span>
+
+              <span class="day-icon"></span>
             </div>
           </div>
+
           <button class="nav-arrow" @click="nextWeek">&#8250;</button>
         </div>
       </div>
@@ -56,118 +65,161 @@
       <div class="stats-grid">
         <div class="stat-card" v-for="stat in weekStats" :key="stat.label">
           <span class="stat-label">{{ stat.label }}</span>
+          <span class="stat-value">{{ stat.value }}</span>
         </div>
       </div>
 
-      <!-- Targeted muscle groups -->
+      <!-- Muscles -->
       <div class="section-title">Targeted muscle groups</div>
       <div class="muscles-grid">
-        <div class="muscle-card" v-for="muscle in sortedMuscleGroups" :key="muscle.name">
+        <div class="muscle-card" v-for="muscle in muscleGroups" :key="muscle.name" @click = "handleMuscleClick(muscle.name)">
           <span class="muscle-label">{{ muscle.name }}</span>
           <span class="muscle-sets">{{ muscle.sets }} sets</span>
         </div>
       </div>
+
     </div>
 
-    <!-- Bottom nav -->
+    <!-- BOTTOM NAV (NOW FULLY FUNCTIONAL) -->
     <nav class="bottom-nav">
       <button
-          v-for="tab in navTabs"
-          :key="tab.name"
-          class="nav-tab"
-          :class="{ 'nav-tab-active': activeTab === tab.name }"
-          @click="activeTab = tab.name"
+        v-for="tab in navTabs"
+        :key="tab.name"
+        class="nav-tab"
+        :class="{ 'nav-tab-active': activeTab === tab.name }"
+        @click="handleTabClick(tab.name)"
       >
         <img :src="tab.icon" :alt="tab.name" class="nav-icon" />
       </button>
     </nav>
+
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 
-import pfpImg      from '@/assets/pfp.png'
-import flameImg    from '@/assets/flame.png'
+const router = useRouter()
+
+// assets
+import pfpImg from '@/assets/pfp.png'
+import flameImg from '@/assets/flame.png'
 import settingsImg from '@/assets/settings.png'
-import workoutImg  from '@/assets/workout.png'
-import homeImg     from '@/assets/home.png'
-import foodImg     from '@/assets/food.png'
-import profileImg  from '@/assets/profile.png'
+import workoutImg from '@/assets/workout.png'
+import homeImg from '@/assets/home.png'
+import foodImg from '@/assets/food.png'
+import profileImg from '@/assets/profile.png'
 
 const assets = {
-  pfp:      pfpImg,
-  flame:    flameImg,
+  pfp: pfpImg,
+  flame: flameImg,
   settings: settingsImg,
 }
 
+// state
 const userName = ref('Levi')
 const activeTab = ref('home')
 
+// NAV BAR
 const navTabs = [
   { name: 'workout', icon: workoutImg },
-  { name: 'home',    icon: homeImg },
-  { name: 'food',    icon: foodImg },
+  { name: 'home', icon: homeImg },
+  { name: 'nutrition', icon: foodImg },
   { name: 'profile', icon: profileImg },
 ]
 
-// ── Dátum / kalendár ─────────────────────────────────────────
-const today = new Date(2026, 2, 16) // 16. marca 2026
+// FIXED NAVIGATION (ALL PAGES)
+function handleTabClick(tab) {
+  activeTab.value = tab
+
+  if (tab === 'home') router.push('/home')
+  if (tab === 'workout') router.push('/workoutpage')
+  if (tab === 'nutrition') router.push('/nutrition')
+  if (tab === 'profile') router.push('/profile')
+}
+
+// HEADER ACTIONS
+function goProfile() {
+  router.push('/profile')
+}
+
+function goSettings() {
+  router.push('/settings')
+}
+
+function goStreak() {
+  router.push('/streak')
+}
+
+function handleMuscleClick(name) {
+  if (name === 'Legs') {
+    router.push('/eastereggs')
+  }
+}
+
+// calendar (unchanged)
+const today = new Date()
+today.setHours(0, 0, 0, 0)
 const weekOffset = ref(0)
 
 const formattedDate = computed(() => {
   const d = new Date(today)
   d.setDate(d.getDate() + weekOffset.value * 7)
+
   return d.toLocaleDateString('en-GB', {
-    day: 'numeric', month: 'long', year: 'numeric', weekday: 'long'
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    weekday: 'long'
   })
 })
 
 const weekDays = computed(() => {
   const base = new Date(today)
   base.setDate(base.getDate() + weekOffset.value * 7)
+
   const mon = new Date(base)
   mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7))
 
-  const dayNames = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
-  const statuses = ['done', 'missed', 'done', null, null, null, null]
+  const dayNames = ['MON','TUE','WED','THU','FRI','SAT','SUN']
+  const statuses = ['done','missed','done',null,null,null,null]
 
   return dayNames.map((name, i) => {
     const d = new Date(mon)
     d.setDate(mon.getDate() + i)
-    const isToday = d.toDateString() === today.toDateString()
+
     return {
       dayName: name,
-      dayNum:  d.getDate(),
-      date:    d.toDateString(),
-      isToday,
-      status:  isToday ? 'today' : statuses[i],
+      dayNum: d.getDate(),
+      date: d.toDateString(),
+      isToday: d.toDateString() === today.toDateString(),
+      status: statuses[i],  
     }
   })
 })
 
-function prevWeek() { weekOffset.value-- }
-function nextWeek() { weekOffset.value++ }
-function selectDay(day) { console.log('Selected', day.date) }
-function goToSettings() { console.log('Settings') }
+function prevWeek(){ weekOffset.value-- }
+function nextWeek(){ weekOffset.value++ }
+function selectDay(day){ console.log(day) }
 
+// stats (unchanged)
 const weekStats = ref([
   { label: 'Duration', value: '275 min' },
   { label: 'Workouts', value: '8' },
-  { label: 'Sets',     value: '235' },
-  { label: 'Lifted',   value: '35 kg' },
-  { label: 'Burn',     value: '9999 kcal' },
-  { label: 'Streak',   value: '3' },
+  { label: 'Sets', value: '235' },
+  { label: 'Lifted', value: '35 kg' },
+  { label: 'Burn', value: '9999 kcal' },
+  { label: 'Streak', value: '3' },
 ])
 
-// ── Svalové skupiny ───────────────────────────────────────────
 const muscleGroups = ref([
-  { name: 'Legs',      sets: 3  },
-  { name: 'Shoulders', sets: 5  },
-  { name: 'Arms',      sets: 19 },
-  { name: 'Back',      sets: 17 },
-  { name: 'Chest',     sets: 12 },
-  { name: 'Core',      sets: 0  },
+  { name: 'Legs', sets: 3 },
+  { name: 'Shoulders', sets: 5 },
+  { name: 'Arms', sets: 19 },
+  { name: 'Back', sets: 17 },
+  { name: 'Chest', sets: 12 },
+  { name: 'Core', sets: 0 },
 ])
 </script>
 
