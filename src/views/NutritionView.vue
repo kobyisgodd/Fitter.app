@@ -146,16 +146,7 @@
 
       </section>
 
-      <!-- CTA -->
-      <section class="cta">
-
-        <h2>Personalise plan</h2>
-
-        <button>
-          Start questionnaire
-        </button>
-
-      </section>
+     
 
     </main>
 
