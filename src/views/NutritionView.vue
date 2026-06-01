@@ -59,15 +59,23 @@
         <!-- MAIN INFO -->
         <div class="dashboard">
 
-          <div class="circle">
-            <div class="circle-inner">
-              <span class="circle-number">{{ kcal }}</span>
-              <span class="circle-text">kcal</span>
-            </div>
+          <div
+            class="circle"
+            :style="{
+            background: `conic-gradient(
+            #e74c3c ${progress}%,
+            #444 ${progress}%)`}">
+          <div class="circle-inner">
+
+         <span class="circle-number">{{ kcal }}</span>
+        <span class="circle-text">kcal</span>
+          </div>
           </div>
 
           <div class="info">
-            <p><strong>goal:</strong> 2000 kcal</p>
+            <p class="goal-row" @click="showGoalsPopup = true">
+              <strong>goal:</strong> {{ calorieGoal }} kcal
+            </p>
             <p><strong>gained:</strong> 1800 kcal</p>
             <p><strong>burn:</strong> 1300 kcal</p>
 
@@ -80,32 +88,66 @@
         </div>
 
         <!-- MACROS -->
+
+        
         <div class="macros">
 
           <div class="macro">
-            <div class="macro-circle blue">
-              <span>0g</span>
-            </div>
+            <div
+  class="macro-circle"
+  :style="{
+    background: `conic-gradient(
+      #4d9fff ${proteinProgress}%,
+      #444 ${proteinProgress}%
+    )`
+  }"
+>
+  <div class="macro-inner">
+    {{ proteinGoal }}g
+  </div>
+</div>
             <p>Protein</p>
           </div>
 
           <div class="macro">
-            <div class="macro-circle green">
-              <span>0g</span>
-            </div>
+           <div
+  class="macro-circle"
+  :style="{
+    background: `conic-gradient(
+      #3ddc84 ${carbsProgress}%,
+      #444 ${carbsProgress}%
+    )`
+  }"
+>
+  <div class="macro-inner">
+    {{ carbsGoal }}g
+  </div>
+</div>
             <p>Carbs</p>
           </div>
 
           <div class="macro">
-            <div class="macro-circle yellow">
-              <span>0g</span>
-            </div>
+            <div
+  class="macro-circle"
+  :style="{
+    background: `conic-gradient(
+      #ffd447 ${fatProgress}%,
+      #444 ${fatProgress}%
+    )`
+  }"
+>
+  <div class="macro-inner">
+    {{ fatGoal }}g
+  </div>
+</div>
             <p>Fat</p>
           </div>
 
         </div>
 
       </section>
+
+      
 
       <!-- MEALS -->
       <section class="meals">
@@ -118,10 +160,6 @@
 
           <div class="meal-header">
             <h3>{{ meal.name }}</h3>
-
-            <button class="plus" @click="addMealItem(meal)">
-              +
-            </button>
           </div>
 
           <div v-if="meal.items.length === 0" class="empty" @click="goMealsSelection">
@@ -170,12 +208,65 @@
       </button>
 
     </nav>
+<div
+  v-if="showGoalsPopup"
+  class="overlay"
+  @click="showGoalsPopup = false"
+>
+  <div class="goals-modal" @click.stop>
+
+    <div class="modal-header">
+      <h2>Nutrition Goals</h2>
+
+      <button
+        class="save-goals-btn"
+        @click="saveGoals"
+      >
+        ✓
+      </button>
+    </div>
+
+    <div class="goal-input">
+      <label>Calories</label>
+      <input
+        type="number"
+        v-model.number="calorieGoal"
+      />
+    </div>
+
+    <div class="goal-input">
+      <label>Protein (g)</label>
+      <input
+        type="number"
+        v-model.number="proteinGoal"
+      />
+    </div>
+
+    <div class="goal-input">
+      <label>Carbs (g)</label>
+      <input
+        type="number"
+        v-model.number="carbsGoal"
+      />
+    </div>
+
+    <div class="goal-input">
+      <label>Fat (g)</label>
+      <input
+        type="number"
+        v-model.number="fatGoal"
+      />
+    </div>
+
+  </div>
+</div>
+
 
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -197,7 +288,59 @@ const assets = {
 }
 
 const kcal = ref(1200)
-const currentDate = ref('Today 24 Mar')
+const selectedDate = ref(new Date())
+
+const currentDate = computed(() => {
+  const today = new Date()
+
+  const isToday =
+    selectedDate.value.toDateString() === today.toDateString()
+
+  const options = {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  }
+
+  const formatted = selectedDate.value.toLocaleDateString(
+    'en-GB',
+    options
+  )
+
+  return isToday ? `Today • ${formatted}` : formatted
+})
+
+const showGoalsPopup = ref(false)
+
+const calorieGoal = ref(2000)
+const proteinGoal = ref(150)
+const carbsGoal = ref(250)
+const fatGoal = ref(70)
+
+const progress = computed(() => {
+  return Math.min(
+    (kcal.value / calorieGoal.value) * 100,
+    100
+  )
+})
+
+
+
+function saveGoals() {
+  showGoalsPopup.value = false
+}
+
+function prevDay() {
+  const newDate = new Date(selectedDate.value)
+  newDate.setDate(newDate.getDate() - 1)
+  selectedDate.value = newDate
+}
+
+function nextDay() {
+  const newDate = new Date(selectedDate.value)
+  newDate.setDate(newDate.getDate() + 1)
+  selectedDate.value = newDate
+}
 
 const meals = ref([
   { name: 'Breakfast', items: [] },
@@ -235,8 +378,7 @@ function goMealsSelection() {
   router.push('/mealsselection')
 }
 
-function prevDay() {}
-function nextDay() {}
+
 </script>
 
 <style scoped>
@@ -359,14 +501,21 @@ function nextDay() {}
   width: 130px;
   height: 130px;
   border-radius: 50%;
-  border: 8px solid white;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .circle-inner {
-  text-align: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #2b2b2b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .circle-number {
@@ -568,5 +717,65 @@ function nextDay() {}
     saturate(500%)
     hue-rotate(330deg)
     brightness(1.3);
+}
+
+.goal-row{
+  cursor:pointer;
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.goals-modal{
+  width:90%;
+  max-width:420px;
+  background:#2a2a2a;
+  border-radius:24px;
+  padding:20px;
+}
+
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.save-goals-btn{
+  border:none;
+  background:none;
+  color:#3ddc84;
+  font-size:32px;
+  cursor:pointer;
+}
+
+.goal-input{
+  display:flex;
+  flex-direction:column;
+  margin-bottom:16px;
+}
+
+.goal-input label{
+  margin-bottom:6px;
+}
+
+.goal-input input{
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:#444;
+  color:white;
+}
+
+.goal-input input {
+  width: 100%;
+  font-size: 16px;
 }
 </style>
