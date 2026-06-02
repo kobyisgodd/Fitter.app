@@ -83,23 +83,53 @@
         <div class="macros">
 
           <div class="macro">
-            <div class="macro-circle blue">
-              <span>0g</span>
-            </div>
+            <div
+  class="macro-circle"
+  :style="{
+    background: `conic-gradient(
+      #4d9fff ${proteinProgress}%,
+      #444 ${proteinProgress}%
+    )`
+  }"
+>
+  <div class="macro-inner">
+    {{ proteinGoal }}g
+  </div>
+</div>
             <p>Protein</p>
           </div>
 
           <div class="macro">
-            <div class="macro-circle green">
-              <span>0g</span>
-            </div>
+           <div
+  class="macro-circle"
+  :style="{
+    background: `conic-gradient(
+      #3ddc84 ${carbsProgress}%,
+      #444 ${carbsProgress}%
+    )`
+  }"
+>
+  <div class="macro-inner">
+    {{ carbsGoal }}g
+  </div>
+</div>
             <p>Carbs</p>
           </div>
 
           <div class="macro">
-            <div class="macro-circle yellow">
-              <span>0g</span>
-            </div>
+            <div
+  class="macro-circle"
+  :style="{
+    background: `conic-gradient(
+      #ffd447 ${fatProgress}%,
+      #444 ${fatProgress}%
+    )`
+  }"
+>
+  <div class="macro-inner">
+    {{ fatGoal }}g
+  </div>
+</div>
             <p>Fat</p>
           </div>
 
@@ -170,6 +200,59 @@
       </button>
 
     </nav>
+<div
+  v-if="showGoalsPopup"
+  class="overlay"
+  @click="showGoalsPopup = false"
+>
+  <div class="goals-modal" @click.stop>
+
+    <div class="modal-header">
+      <h2>Nutrition Goals</h2>
+
+      <button
+        class="save-goals-btn"
+        @click="saveGoals"
+      >
+        ✓
+      </button>
+    </div>
+
+    <div class="goal-input">
+      <label>Calories</label>
+      <input
+        type="number"
+        v-model.number="calorieGoal"
+      />
+    </div>
+
+    <div class="goal-input">
+      <label>Protein (g)</label>
+      <input
+        type="number"
+        v-model.number="proteinGoal"
+      />
+    </div>
+
+    <div class="goal-input">
+      <label>Carbs (g)</label>
+      <input
+        type="number"
+        v-model.number="carbsGoal"
+      />
+    </div>
+
+    <div class="goal-input">
+      <label>Fat (g)</label>
+      <input
+        type="number"
+        v-model.number="fatGoal"
+      />
+    </div>
+
+  </div>
+</div>
+
 
   </div>
 </template>
