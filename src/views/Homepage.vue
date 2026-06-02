@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -118,8 +118,35 @@ const assets = {
 }
 
 // state
-const userName = ref('Levi')
+const userName = ref('User')
 const activeTab = ref('home')
+onMounted(async () => {
+
+  const token = localStorage.getItem('token')
+
+  if (!token) {
+    router.push('/signin')
+    return
+  }
+
+  try {
+
+    const user = await getProfile()
+
+    if (user.error) {
+      localStorage.removeItem('token')
+      router.push('/signin')
+      return
+    }
+
+    userName.value = user.username
+
+  } catch {
+
+    localStorage.removeItem('token')
+    router.push('/signin')
+  }
+})
 
 // NAV BAR
 const navTabs = [

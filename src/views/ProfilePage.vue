@@ -139,6 +139,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
 
 import pfpImg from '@/assets/pfp.png'
 import flameImg from '@/assets/flame.png'
