@@ -75,26 +75,22 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import logo from '../assets/fiterlogo.png'
+import { registerUser } from '../services/api'
 
 const router = useRouter()
 
-// INPUTS
 const name = ref('')
 const email = ref('')
 const password = ref('')
-
-// ERROR
 const error = ref('')
 
-// BACK
 function goBack() {
   router.back()
 }
 
-// REGISTER
-function register() {
+async function register() {
+  error.value = ''
 
-  // EMPTY CHECK
   if (
     !name.value ||
     !email.value ||
@@ -104,23 +100,23 @@ function register() {
     return
   }
 
-  // SAVE USER TEMPORARY
-  const user = {
-    name: name.value,
-    email: email.value,
-    password: password.value
+  try {
+    const result = await registerUser({
+      username: name.value,
+      email: email.value,
+      password: password.value
+    })
+
+    if (result.error) {
+      error.value = result.error
+      return
+    }
+
+    router.push('/signin')
+
+  } catch {
+    error.value = 'Server connection failed.'
   }
-
-  localStorage.setItem(
-    'user',
-    JSON.stringify(user)
-  )
-
-  // CLEAR ERROR
-  error.value = ''
-
-  // OPEN HOME PAGE
-  router.push('/home')
 }
 </script>
 

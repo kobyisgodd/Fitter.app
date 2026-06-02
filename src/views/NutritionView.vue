@@ -196,17 +196,43 @@ const assets = {
   settings: settingsImg,
 }
 
-const kcal = ref(1200)
+//const kcal = ref(1200)
+const kcal = computed(() =>
+  meals.value.reduce(
+    (sum, meal) =>
+      sum +
+      meal.items.reduce(
+        (mealSum, item) => mealSum + item.kcal,
+        0
+      ),
+    0
+  )
+)
+
+const nutritionSummary = computed(() => ({
+  goal: 2000,
+  gained: totalCalories.value,
+  burned: caloriesBurned.value
+}))
+
 const currentDate = ref('Today 24 Mar')
 
 const meals = ref([
   { name: 'Breakfast', items: [] },
   { name: 'Snack', items: [] },
-  { name: 'Lunch', items: [{ name: 'Banana', kcal: 122 }] },
+  { name: 'Lunch', items: [{
+    id: crypto.randomUUID(),
+    name: 'Banana',
+    kcal: 122
+  }] },
   { name: 'Dinner', items: [] }
 ])
 
-function addMealItem(meal) {
+function addMealItem(mealName) {
+  const meal = meals.value.find(m => m.name === mealName)
+
+  if (!meal) return
+
   meal.items.push({ name: 'New Food', kcal: 100 })
 }
 
@@ -232,7 +258,12 @@ function goWorkout() {
 }
 
 function goMealsSelection() {
-  router.push('/mealsselection')
+  router.push({
+  path: '/mealsselection',
+  query: {
+    meal: meal.name
+  }
+})
 }
 
 function prevDay() {}

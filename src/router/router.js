@@ -1,8 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 // Simple inline Home component
+// const Home = {
+//   template: `<div style="padding:24px; text-align:center"><h2>Welcome</h2><p>This is the home page.</p></div>`
+// }
 const Home = {
-  template: `<div style="padding:24px; text-align:center"><h2>Welcome</h2><p>This is the home page.</p></div>`
+  path: '/',
+  redirect: '/intropage'
 }
 
 // Lazy-load the Register and Intro pages
@@ -42,5 +46,25 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+
+  const token = localStorage.getItem('token')
+
+  const publicPages = [
+    '/',
+    '/register',
+    '/signin',
+    '/intropage'
+  ]
+
+  if (
+    !publicPages.includes(to.path)
+    && !token
+  ) {
+    return next('/signin')
+  }
+
+  next()
+})
 
 export default router

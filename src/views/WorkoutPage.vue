@@ -139,8 +139,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+
+const API_URL = 'http://localhost:3000'
 
 const search = ref('')
 const router = useRouter()
@@ -178,11 +180,34 @@ function startWorkout() {
 }
 
 /* WORKOUT DATA */
-const workouts = ref([
-  { id: 1, name: 'Lower Body Routine' },
-  { id: 2, name: 'Push Day' },
-  { id: 3, name: 'Full Body' }
-])
+// const workouts = ref([
+//   { id: 1, name: 'Lower Body Routine' },
+//   { id: 2, name: 'Push Day' },
+//   { id: 3, name: 'Full Body' }
+// ])
+const workouts = ref([])
+
+async function loadWorkouts() {
+  try {
+    const token = localStorage.getItem('token')
+
+    const response = await fetch(`${API_URL}/workouts`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    const data = await response.json()
+
+    workouts.value = data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+onMounted(() => {
+  loadWorkouts()
+})
 
 const filteredWorkouts = computed(() => {
   if (!search.value) return workouts.value
@@ -202,20 +227,47 @@ function closeMenu() {
   openMenu.value = null
 }
 
-function renameWorkout(index) {
+async function renameWorkout(index) {
   const newName = prompt('Rename workout:')
-  if (newName && newName.trim()) {
-    workouts.value[index].name = newName.trim()
-  }
+
+  if (!newName?.trim()) return
+
+  const token = localStorage.getItem('token')
+
+  const workout = workouts.value[index]
+
+  await fetch(`${API_URL}/workouts/${workout.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      name: newName.trim()
+    })
+  })
+
+  workout.name = newName.trim()
+
   closeMenu()
 }
 
-function deleteWorkout(index) {
+async function deleteWorkout(index) {
+  const token = localStorage.getItem('token')
+
+  const workout = workouts.value[index]
+
+  await fetch(`${API_URL}/workouts/${workout.id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+
   workouts.value.splice(index, 1)
+
   closeMenu()
 }
-
-
 </script>
 
 

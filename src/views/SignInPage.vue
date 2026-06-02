@@ -66,25 +66,22 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import logo from '../assets/fiterlogo.png'
+import { loginUser } from '../services/api'
 
 const router = useRouter()
 
-// INPUTS
 const email = ref('')
 const password = ref('')
-
-// ERROR
 const error = ref('')
 
-// BACK
 function goBack() {
   router.back()
 }
 
-// SIGN IN
-function signIn() {
+async function signIn() {
 
-  // EMPTY CHECK
+  error.value = ''
+
   if (
     !email.value ||
     !password.value
@@ -93,33 +90,27 @@ function signIn() {
     return
   }
 
-  // GET SAVED USER
-  const savedUser = JSON.parse(
-    localStorage.getItem('user')
-  )
+  try {
 
-  // CHECK IF USER EXISTS
-  if (!savedUser) {
-    error.value = 'No registered user found.'
-    return
-  }
+    const result = await loginUser({
+      email: email.value,
+      password: password.value
+    })
 
-  // CHECK LOGIN
-  if (
-    email.value === savedUser.email &&
-    password.value === savedUser.password
-  ) {
+    if (result.error) {
+      error.value = result.error
+      return
+    }
 
-    // CLEAR ERROR
-    error.value = ''
+    localStorage.setItem(
+      'token',
+      result.token
+    )
 
-    // GO HOME
     router.push('/home')
 
-  } else {
-
-    error.value = 'Wrong email or password.'
-
+  } catch {
+    error.value = 'Server connection failed.'
   }
 }
 </script>
