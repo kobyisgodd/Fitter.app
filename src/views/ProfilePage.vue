@@ -48,9 +48,13 @@
 
         <h1>Profile</h1>
 
-        <p>
-          Profile page is empty for now.
-        </p>
+          <p v-if="user">
+            Name: {{ user.name }}
+          </p>
+
+          <p v-if="user">
+            Email: {{ user.email }}
+          </p>
         <p>
             lebo koby je nigger :/
         </p>
@@ -110,8 +114,12 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
 
 const router = useRouter()
+const API_URL = 'http://localhost:3000'
+
+const user = ref(null)
 
 // ASSETS
 import pfpImg from '@/assets/pfp.png'
@@ -122,6 +130,24 @@ import workoutImg from '@/assets/workout.png'
 import homeImg from '@/assets/home.png'
 import foodImg from '@/assets/food.png'
 import profileImg from '@/assets/profile.png'
+
+async function loadProfile() {
+  try {
+    const token = localStorage.getItem('token')
+
+    const response = await fetch(`${API_URL}/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    user.value = await response.json()
+
+  } catch (error) {
+    console.error(error)
+  }
+}
+onMounted(loadProfile)
 
 const assets = {
   pfp: pfpImg,

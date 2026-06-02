@@ -31,6 +31,7 @@
         <button class="menu-item">Calendar</button>
         <button class="menu-item">Nutrition settings</button>
 
+        <button class="menu-item" @click="logout">Logout</button>
       </div>
 
     </main>
@@ -45,6 +46,11 @@ const router = useRouter()
 
 function goHome() {
   router.push('/home')
+}
+
+function logout() {
+  localStorage.removeItem('token')
+  router.push('/signin')
 }
 </script>
 

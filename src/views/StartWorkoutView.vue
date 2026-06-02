@@ -132,6 +132,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const API_URL = 'http://localhost:3000'
 
 function goBack() {
   router.back()
@@ -202,9 +203,44 @@ function deleteExercise(i) {
   exercises.value.splice(i, 1)
 }
 
-function finishWorkout() {
-  console.log('Workout finished')
-  router.push('/home')
+async function finishWorkout() {
+  try {
+    const token = localStorage.getItem('token')
+
+    const workoutResponse = await fetch(`${API_URL}/workouts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        name: workoutName.value
+      })
+    })
+
+    const workout = await workoutResponse.json()
+
+    for (const exercise of exercises.value) {
+      await fetch(
+        `${API_URL}/workouts/${workout.id}/exercises`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            name: exercise.name
+          })
+        }
+      )
+    }
+
+    router.push('/workoutpage')
+
+  } catch (error) {
+    console.error(error)
+  }
 }
 </script>
 
