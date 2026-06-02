@@ -252,18 +252,11 @@ function goFood() {
 
 /* BOTTOM NAV */
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 14px 0 20px;
-  background: linear-gradient(
-    180deg,
-    #1a1a1a 0%,
-    #e74c3c 100%
-  );
+  display: flex; justify-content: space-around; align-items: center;
+  padding: 10px 0 20px;
+  background: linear-gradient(180deg, #1a1a1a 0%, #e74c3c 100%);
+  flex-shrink: 0;
+  border-top: 1px solid rgba(255,255,255,0.07);
 }
 
 .nav-tab {
