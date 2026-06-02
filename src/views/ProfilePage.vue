@@ -5,38 +5,29 @@
     <header class="topbar">
 
       <div class="header-left">
-
         <img
-          :src="assets.pfp"
-          alt="Profile"
-          class="avatar"
-          @click="goProfile"
+            :src="assets.pfp"
+            alt="Profile"
+            class="avatar"
         />
 
         <div class="streak-badge">
-
-          <span class="streak-number">
-            75
-          </span>
+          <span class="streak-number">75</span>
 
           <img
-            :src="assets.flame"
-            alt="Flame"
-            class="flame-icon"
+              :src="assets.flame"
+              alt="Flame"
+              class="flame-icon"
           />
-
         </div>
-
       </div>
 
-      <button class="settings-btn" @click="goSettings">
-
+      <button class="settings-btn" @click = "goSettings">
         <img
-          :src="assets.settings"
-          alt="Settings"
-          class="settings-icon"
+            :src="assets.settings"
+            alt="Settings"
+            class="settings-icon"
         />
-
       </button>
 
     </header>
@@ -44,63 +35,101 @@
     <!-- CONTENT -->
     <main class="content">
 
-      <div class="empty-box">
+      <section class="profile-card">
 
-        <h1>Profile</h1>
+        <img
+            :src="assets.pfp"
+            class="profile-avatar"
+            alt="Profile"
+        />
 
-        <p>
-          Profile page is empty for now.
+        <h1 class="username">
+          Levi Ackerman
+        </h1>
+
+        <p class="profile-subtitle">
+          Fitness Enthusiast
         </p>
-        <p>
-            lebo koby je nigger :/
-        </p>
 
-      </div>
+      </section>
+
+      <section class="stats">
+
+        <div class="stat-box">
+          <h2>75</h2>
+          <span>Day Streak</span>
+        </div>
+
+        <div class="stat-box">
+          <h2>124</h2>
+          <span>Workouts</span>
+        </div>
+
+        <div class="stat-box">
+          <h2>82kg</h2>
+          <span>Weight</span>
+        </div>
+
+      </section>
+
+      <section class="card">
+
+        <h2>Personal Info</h2>
+
+        <div class="info-row">
+          <span>Age</span>
+          <span>20</span>
+        </div>
+
+        <div class="info-row">
+          <span>Height</span>
+          <span>185 cm</span>
+        </div>
+
+        <div class="info-row">
+          <span>Goal</span>
+          <span>Build Muscle</span>
+        </div>
+
+      </section>
+
+      <section class="card">
+
+        <h2>Achievements</h2>
+
+        <div class="achievement">
+          🔥 75 Day Streak
+        </div>
+
+        <div class="achievement">
+          💪 100+ Workouts Completed
+        </div>
+
+        <div class="achievement">
+          🥗 Nutrition Tracking Active
+        </div>
+
+      </section>
 
     </main>
 
     <!-- BOTTOM NAV -->
     <nav class="bottom-nav">
 
-      <!-- WORKOUT -->
-      <button
-        class="nav-tab"
-        @click="goWorkout"
-      >
-        <img
-          :src="workoutImg"
-          class="nav-icon"
-        />
+      <button class="nav-tab" @click="goWorkout">
+        <img :src="workoutImg" class="nav-icon" />
       </button>
 
-      <!-- HOME -->
-      <button
-        class="nav-tab"
-        @click="goHome"
-      >
-        <img
-          :src="homeImg"
-          class="nav-icon"
-        />
+      <button class="nav-tab" @click="goHome">
+        <img :src="homeImg" class="nav-icon" />
       </button>
 
-      <!-- FOOD -->
-      <button
-        class="nav-tab"
-        @click="goFood"
-      >
-        <img
-          :src="foodImg"
-          class="nav-icon"
-        />
+      <button class="nav-tab" @click="goFood">
+        <img :src="foodImg" class="nav-icon" />
       </button>
 
-      <!-- PROFILE -->
       <button class="nav-tab active">
-        <img
-          :src="profileImg"
-          class="nav-icon"
-        />
+        <img :src="profileImg" class="nav-icon" />
       </button>
 
     </nav>
@@ -111,9 +140,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
 
-const router = useRouter()
-
-// ASSETS
 import pfpImg from '@/assets/pfp.png'
 import flameImg from '@/assets/flame.png'
 import settingsImg from '@/assets/settings.png'
@@ -123,22 +149,18 @@ import homeImg from '@/assets/home.png'
 import foodImg from '@/assets/food.png'
 import profileImg from '@/assets/profile.png'
 
+const router = useRouter()
+
 const assets = {
   pfp: pfpImg,
   flame: flameImg,
   settings: settingsImg,
 }
-
-/* HEADER NAV */
-function goProfile() {
-  router.push('/profile')
-}
-
 function goSettings() {
   router.push('/settings')
 }
 
-/* FOOTER NAV */
+/* NAV */
 function goWorkout() {
   router.push('/workoutpage')
 }
@@ -165,43 +187,39 @@ function goFood() {
   color: white;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   font-family: 'Segoe UI', sans-serif;
 }
 
 /* HEADER */
 .topbar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 16px 20px 10px;
-  background: #1a1a1a;
-  flex-shrink: 0;
+  align-items: center;
+  padding: 18px 20px;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .avatar {
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #c0392b;
+  border: 2px solid #e74c3c;
 }
 
 .streak-badge {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
 .streak-number {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: bold;
 }
 
 .flame-icon {
@@ -210,65 +228,128 @@ function goFood() {
 }
 
 .settings-btn {
-  background: none;
+  background: transparent;
   border: none;
-  cursor: pointer;
 }
 
 .settings-icon {
   width: 24px;
-  height: 24px;
-  filter: invert(1) brightness(0.7);
+  filter: invert(1);
 }
 
 /* CONTENT */
 .content {
   flex: 1;
-  padding: 24px 20px 120px;
+  padding: 0 20px 120px;
 }
 
-.empty-box {
-  width: 100%;
-  min-height: 300px;
-  border-radius: 28px;
+/* PROFILE */
+.profile-card {
   background: #2a2a2a;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  border-radius: 28px;
+  padding: 30px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.empty-box h1 {
-  font-size: 34px;
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid #e74c3c;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.username {
   color: #e74c3c;
-  margin-bottom: 12px;
-  font-family: Georgia, serif;
+  font-size: 32px;
+  margin-bottom: 5px;
 }
 
-.empty-box p {
+.profile-subtitle {
+  color: #bdbdbd;
+}
+
+/* STATS */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-box {
+  background: #2a2a2a;
+  border-radius: 20px;
+  padding: 20px 10px;
+  text-align: center;
+}
+
+.stat-box h2 {
+  color: #e74c3c;
+  margin-bottom: 6px;
+}
+
+.stat-box span {
   color: #cfcfcf;
-  font-size: 15px;
+  font-size: 13px;
+}
+
+/* CARDS */
+.card {
+  background: #2a2a2a;
+  border-radius: 24px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.card h2 {
+  color: #e74c3c;
+  margin-bottom: 15px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #3c3c3c;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.achievement {
+  padding: 12px 0;
+  border-bottom: 1px solid #3c3c3c;
+}
+
+.achievement:last-child {
+  border-bottom: none;
 }
 
 /* BOTTOM NAV */
 .bottom-nav {
   position: fixed;
   bottom: 0;
+  left: 0;
   width: 100%;
+
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 14px 0 20px;
-  background: linear-gradient(
-    180deg,
-    #1a1a1a 0%,
-    #e74c3c 100%
-  );
+
+  padding: 12px 0 20px;
+
+  background: linear-gradient(180deg, #1a1a1a 0%, #e74c3c 100%);
+  border-top: 1px solid rgba(255,255,255,0.08);
 }
 
 .nav-tab {
   background: none;
   border: none;
+  cursor: pointer;
 }
 
 .nav-icon {
@@ -279,10 +360,10 @@ function goFood() {
 
 .active .nav-icon {
   filter:
-    invert(30%)
-    sepia(90%)
-    saturate(500%)
-    hue-rotate(330deg)
-    brightness(1.3);
+      invert(30%)
+      sepia(90%)
+      saturate(500%)
+      hue-rotate(330deg)
+      brightness(1.3);
 }
 </style>
