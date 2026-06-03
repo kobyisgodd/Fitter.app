@@ -120,33 +120,33 @@ const assets = {
 // state
 const userName = ref('User')
 const activeTab = ref('home')
-onMounted(async () => {
+// onMounted(async () => {
 
-  const token = localStorage.getItem('token')
+//   const token = localStorage.getItem('token')
 
-  if (!token) {
-    router.push('/signin')
-    return
-  }
+//   if (!token) {
+//     router.push('/signin')
+//     return
+//   }
 
-  try {
+//   try {
 
-    const user = await getProfile()
+//     const user = await getProfile()
 
-    if (user.error) {
-      localStorage.removeItem('token')
-      router.push('/signin')
-      return
-    }
+//     if (user.error) {
+//       localStorage.removeItem('token')
+//       router.push('/signin')
+//       return
+//     }
 
-    userName.value = user.username
+//     userName.value = user.username
 
-  } catch {
+//   } catch {
 
-    localStorage.removeItem('token')
-    router.push('/signin')
-  }
-})
+//     localStorage.removeItem('token')
+//     router.push('/signin')
+//   }
+// })
 
 // NAV BAR
 const navTabs = [

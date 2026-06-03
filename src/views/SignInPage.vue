@@ -82,32 +82,39 @@ async function signIn() {
 
   error.value = ''
 
-  if (
-    !email.value ||
-    !password.value
-  ) {
-    error.value = 'Please fill all fields.'
-    return
-  }
+  // if (
+  //   !email.value ||
+  //   !password.value
+  // ) {
+  //   error.value = 'Please fill all fields.'
+  //   return
+  // }
 
   try {
-
     const result = await loginUser({
       email: email.value,
       password: password.value
     })
+
+    console.log(result)
 
     if (result.error) {
       error.value = result.error
       return
     }
 
+    console.log('saving token', result.token)
+
     localStorage.setItem(
       'token',
       result.token
     )
 
+    console.log(localStorage.getItem('token'))
+
     router.push('/home')
+   
+    console.log('redirecting...')
 
   } catch {
     error.value = 'Server connection failed.'

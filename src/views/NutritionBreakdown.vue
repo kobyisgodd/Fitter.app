@@ -162,6 +162,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 const foodName = computed(() => route.query.name)
 
 function goBack() {
@@ -177,19 +178,30 @@ const units = [
 
 const selectedUnit = ref(units[0])
 const servingSize = ref(1)
+// const servingSize = computed({
+//   get: ...
+//   set: value => {
+//     size.value = Math.max(0.1, value)
+//   }
+// })
 
 /* BASE VALUES */
-const baseCalories = 122
-const baseProtein = 0.93
-const baseCarbs = 28.61
-const baseFat = 0.35
+// const baseCalories = 122
+// const baseProtein = 0.93
+// const baseCarbs = 28.61
+// const baseFat = 0.35
 
 /* UNIT LOGIC */
 const unitMultiplier = computed(() => {
-  if (selectedUnit.value.type === 'piece') return 1
-  if (selectedUnit.value.type === 'g') return 0.8
-  if (selectedUnit.value.type === 'ml') return 0.8
-  return 1
+  // if (selectedUnit.value.type === 'piece') return 1
+  // if (selectedUnit.value.type === 'g') return 0.8
+  // if (selectedUnit.value.type === 'ml') return 0.8
+  // return 1
+  const unitConversions = {
+  piece: 1,
+  g: 0.8,
+  ml: 0.8
+}
 })
 
 const totalMultiplier = computed(() => {
@@ -230,6 +242,7 @@ function logFood() {
   console.log('LOG:', payload)
 
   router.push('/nutrition')
+  //data is lost?!
 }
 </script>
 
